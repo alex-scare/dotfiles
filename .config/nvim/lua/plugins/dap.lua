@@ -2,31 +2,36 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      "rcarriga/nvim-dap-ui",
       "nvim-neotest/nvim-nio",
-      "leoluz/nvim-dap-go",
     },
     config = function()
       local dap = require("dap")
-      local dapui = require("dapui")
       local uv = vim.uv or vim.loop
 
-      dapui.setup()
-
-      dap.adapters.go = {
-        type = "server",
-        host = "127.0.0.1",
-        port = "${port}",
-        executable = {
-          command = "dlv",
-          args = {
-            "dap",
-            "--listen=127.0.0.1:${port}",
-            "--log",
-            "--log-output=dap",
+      dap.adapters.go = function(callback, client_config)
+        local host = (client_config and client_config.host) or "127.0.0.1"
+        local port = (client_config and client_config.port) or "${port}"
+        callback({
+          type = "server",
+          host = host,
+          port = port,
+          executable = {
+            command = "dlv",
+            args = {
+              "dap",
+              "-l",
+              string.format("%s:%s", host, tostring(port)),
+              "--log",
+              "--log-output=dap",
+            },
+            detached = vim.fn.has("win32") == 0,
           },
-        },
-      }
+          options = {
+            initialize_timeout_sec = 20,
+          },
+        })
+      end
+      dap.adapters.delve = dap.adapters.go
 
       local function path_type(path)
         local stat = uv.fs_stat(path)
@@ -58,7 +63,7 @@ return {
         while current ~= "" do
           local candidate = current .. "/.vscode/launch.json"
           if path_type(candidate) == "file" then
-            return candidate, current
+            return candidate
           end
           local parent = normalize_dir(vim.fn.fnamemodify(current, ":h"))
           if parent == current then
@@ -67,13 +72,14 @@ return {
           current = parent
         end
 
-        return nil, nil
+        return nil
       end
 
       local function replace_workspace_placeholders(value, workspace_root, workspace_basename)
         if type(value) == "string" then
           value = value:gsub("${workspaceFolderBasename}", workspace_basename)
-          return value:gsub("${workspaceFolder}", workspace_root)
+          value = value:gsub("${workspaceFolder}", workspace_root)
+          return value:gsub("${workspaceRoot}", workspace_root)
         end
         if type(value) ~= "table" then
           return value
@@ -86,10 +92,73 @@ return {
         return setmetatable(resolved, getmetatable(value))
       end
 
+      local function parse_env_file(env_path)
+        local vars = {}
+        if path_type(env_path) ~= "file" then
+          return vars
+        end
+
+        local fp = io.open(env_path, "r")
+        if not fp then
+          return vars
+        end
+
+        for line in fp:lines() do
+          local trimmed = vim.trim(line)
+          if trimmed ~= "" and not vim.startswith(trimmed, "#") then
+            trimmed = trimmed:gsub("^export%s+", "")
+            local key, value = trimmed:match("^([%w_][%w_%.-]*)%s*=%s*(.*)$")
+            if key then
+              if #value >= 2 then
+                local first = value:sub(1, 1)
+                local last = value:sub(-1)
+                if (first == '"' and last == '"') or (first == "'" and last == "'") then
+                  value = value:sub(2, -2)
+                end
+              end
+              vars[key] = value
+            end
+          end
+        end
+
+        fp:close()
+        return vars
+      end
+
+      local function apply_env_file(config, workspace_root)
+        local env_file = config.envFile
+        if type(env_file) ~= "string" or env_file == "" then
+          return config
+        end
+
+        if not env_file:match("^/") then
+          env_file = normalize_dir(workspace_root .. "/" .. env_file)
+        end
+
+        local env_from_file = parse_env_file(env_file)
+        if next(env_from_file) ~= nil then
+          config.env = vim.tbl_extend("force", env_from_file, config.env or {})
+        end
+
+        config.envFile = nil
+        return config
+      end
+
+      local function normalize_go_output_mode(config)
+        if type(config) ~= "table" then
+          return config
+        end
+        if (config.type == "go" or config.type == "delve") and config.outputMode == nil then
+          -- Delve emits program output as DAP events reliably in remote mode.
+          config.outputMode = "remote"
+        end
+        return config
+      end
+
       local vscode = require("dap.ext.vscode")
       dap.providers.configs["dap.launch.json"] = function(bufnr)
         local start_from = vim.api.nvim_buf_get_name(bufnr)
-        local launch_json, workspace_root = find_nearest_launch_json(start_from)
+        local launch_json = find_nearest_launch_json(start_from)
         if not launch_json then
           return {}
         end
@@ -102,10 +171,14 @@ return {
           return {}
         end
 
+        local workspace_root = normalize_dir(vim.fn.fnamemodify(launch_json, ":h:h"))
         local workspace_basename = vim.fn.fnamemodify(workspace_root, ":t")
         local resolved = {}
         for _, config in ipairs(configs) do
-          table.insert(resolved, replace_workspace_placeholders(config, workspace_root, workspace_basename))
+          local item = replace_workspace_placeholders(config, workspace_root, workspace_basename)
+          item = apply_env_file(item, workspace_root)
+          item = normalize_go_output_mode(item)
+          table.insert(resolved, item)
         end
         return resolved
       end
@@ -155,40 +228,37 @@ return {
         vim.keymap.set("n", lhs, rhs, { desc = desc })
       end
 
-      local original_run_last = dap.run_last
-      dap.run_last = function()
-        local session = dap.session()
-        if session and session.config and session.config.type == "go" then
-          local config = session.config
-          dap.terminate({
-            on_done = function()
-              vim.schedule(function()
-                dap.run(config, { new = true })
-              end)
-            end,
-          })
-          return
-        end
-        original_run_last()
-      end
-
       map("<leader>dd", dap.continue, "DAP: start/continue")
+      map("<leader>dl", dap.step_over, "DAP: step over")
+      map("<leader>dj", dap.step_into, "DAP: step into")
+      map("<leader>dk", dap.step_out, "DAP: step out")
+      map("<leader>dh", dap.step_back, "DAP: step back")
       map("<leader>db", dap.toggle_breakpoint, "DAP: toggle breakpoint")
       map("<leader>dB", function()
         dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
       end, "DAP: conditional breakpoint")
-      map("<leader>dn", dap.step_over, "DAP: step over")
-      map("<leader>di", dap.step_into, "DAP: step into")
-      map("<leader>do", dap.step_out, "DAP: step out")
       map("<leader>dr", dap.repl.toggle, "DAP: toggle REPL")
-      map("<leader>dl", dap.run_last, "DAP: run last")
+      map("<leader>dn", dap.run_last, "DAP: run last")
       map("<leader>dq", dap.terminate, "DAP: terminate")
-      map("<leader>du", dapui.toggle, "DAP: toggle UI")
+    end,
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
 
-      dap.listeners.before.event_terminated["dapui_config"] = function()
+      dapui.setup()
+      vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "DAP: toggle UI" })
+
+      dap.listeners.before.event_terminated.dapui_config = function()
         dapui.close()
       end
-      dap.listeners.before.event_exited["dapui_config"] = function()
+      dap.listeners.before.event_exited.dapui_config = function()
         dapui.close()
       end
     end,
