@@ -9,10 +9,9 @@ return {
     config = function()
       local dap = require("dap")
       local dapui = require("dapui")
-      local dapgo = require("dap-go")
+      local uv = vim.uv or vim.loop
 
       dapui.setup()
-      dapgo.setup()
 
       dap.adapters.go = {
         type = "server",
@@ -29,109 +28,125 @@ return {
         },
       }
 
-      local function load_env_file(path)
-        local env = {}
-        local ok, lines = pcall(vim.fn.readfile, path)
+      local function path_type(path)
+        local stat = uv.fs_stat(path)
+        if not stat then
+          return nil
+        end
+        return stat.type
+      end
+
+      local function normalize_dir(path)
+        local normalized = vim.fn.fnamemodify(path, ":p")
+        if normalized ~= "/" then
+          normalized = normalized:gsub("/+$", "")
+        end
+        return normalized
+      end
+
+      local function find_nearest_launch_json(start_from)
+        local current = start_from
+        if current == "" then
+          current = vim.fn.getcwd()
+        end
+
+        if path_type(current) == "file" then
+          current = vim.fn.fnamemodify(current, ":h")
+        end
+        current = normalize_dir(current)
+
+        while current ~= "" do
+          local candidate = current .. "/.vscode/launch.json"
+          if path_type(candidate) == "file" then
+            return candidate, current
+          end
+          local parent = normalize_dir(vim.fn.fnamemodify(current, ":h"))
+          if parent == current then
+            break
+          end
+          current = parent
+        end
+
+        return nil, nil
+      end
+
+      local function replace_workspace_placeholders(value, workspace_root, workspace_basename)
+        if type(value) == "string" then
+          value = value:gsub("${workspaceFolderBasename}", workspace_basename)
+          return value:gsub("${workspaceFolder}", workspace_root)
+        end
+        if type(value) ~= "table" then
+          return value
+        end
+
+        local resolved = {}
+        for key, item in pairs(value) do
+          resolved[key] = replace_workspace_placeholders(item, workspace_root, workspace_basename)
+        end
+        return setmetatable(resolved, getmetatable(value))
+      end
+
+      local vscode = require("dap.ext.vscode")
+      dap.providers.configs["dap.launch.json"] = function(bufnr)
+        local start_from = vim.api.nvim_buf_get_name(bufnr)
+        local launch_json, workspace_root = find_nearest_launch_json(start_from)
+        if not launch_json then
+          return {}
+        end
+
+        local ok, configs = pcall(vscode.getconfigs, launch_json)
         if not ok then
-          return env
+          vim.notify_once("Can't get configurations from launch.json:\n" .. tostring(configs), vim.log.levels.WARN, {
+            title = "DAP",
+          })
+          return {}
         end
-        for _, line in ipairs(lines) do
-          local s = line:gsub("^%s+", ""):gsub("%s+$", "")
-          if s ~= "" and not s:match("^#") then
-            local key, value = s:match("^export%s+([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
-            if not key then
-              key, value = s:match("^([A-Za-z_][A-Za-z0-9_]*)=(.*)$")
-            end
-            if key then
-              value = value:gsub("^%s+", ""):gsub("%s+$", "")
-              value = value:gsub("^\"(.*)\"$", "%1"):gsub("^'(.*)'$", "%1")
-              env[key] = value
-            end
+
+        local workspace_basename = vim.fn.fnamemodify(workspace_root, ":t")
+        local resolved = {}
+        for _, config in ipairs(configs) do
+          table.insert(resolved, replace_workspace_placeholders(config, workspace_root, workspace_basename))
+        end
+        return resolved
+      end
+
+      local flutter_bin = vim.fn.exepath("flutter")
+      local dart_bin = vim.fn.exepath("dart")
+      local fvm_default_bin = vim.fn.expand("~") .. "/fvm/default/bin"
+      local function env_list(extra_env)
+        local merged = vim.tbl_extend("force", vim.fn.environ(), extra_env or {})
+        local items = {}
+        for key, value in pairs(merged) do
+          if type(key) == "string" and not key:find("=") and value ~= nil then
+            items[#items + 1] = key .. "=" .. tostring(value)
           end
         end
-        return env
+        return items
       end
 
-      local function upsert_config(filetype, name, config)
-        dap.configurations[filetype] = dap.configurations[filetype] or {}
-        local configs = dap.configurations[filetype]
-        for i, existing in ipairs(configs) do
-          if existing.name == name then
-            configs[i] = config
-            return
-          end
-        end
-        table.insert(configs, config)
+      if flutter_bin == "" and path_type(fvm_default_bin .. "/flutter") == "file" then
+        flutter_bin = fvm_default_bin .. "/flutter"
       end
-      local function remove_config(filetype, name)
-        local configs = dap.configurations[filetype]
-        if not configs then
-          return
-        end
-        for i = #configs, 1, -1 do
-          if configs[i].name == name then
-            table.remove(configs, i)
-          end
-        end
+      if dart_bin == "" and path_type(fvm_default_bin .. "/dart") == "file" then
+        dart_bin = fvm_default_bin .. "/dart"
       end
 
-      local workspace_default_go_name = "Debug API Server (workspace default)"
-      local function refresh_go_workspace_config()
-        remove_config("go", workspace_default_go_name)
-
-        local root = vim.fn.getcwd()
-        local api_dir = root .. "/api-server"
-        local server_dir = api_dir .. "/cmd/server"
-        if vim.fn.isdirectory(api_dir) ~= 1 or vim.fn.isdirectory(server_dir) ~= 1 then
-          return
-        end
-
-        upsert_config("go", workspace_default_go_name, {
-          name = workspace_default_go_name,
-          type = "go",
-          request = "launch",
-          console = "internalConsole",
-          outputMode = "remote",
-          stopOnEntry = true,
-          program = function()
-            return vim.fn.getcwd() .. "/api-server/cmd/server"
-          end,
-          cwd = function()
-            return vim.fn.getcwd() .. "/api-server"
-          end,
-          env = function()
-            return load_env_file(vim.fn.getcwd() .. "/.env")
-          end,
-          args = {},
-        })
-      end
-
-      refresh_go_workspace_config()
-
-      local workspace_dap_group = vim.api.nvim_create_augroup("WorkspaceDapConfig", { clear = true })
-      vim.api.nvim_create_autocmd("DirChanged", {
-        group = workspace_dap_group,
-        callback = function()
-          refresh_go_workspace_config()
-        end,
-      })
-
-      local flutter_adapter = vim.fn.stdpath("config") .. "/scripts/flutter_dap_adapter.py"
-      if vim.fn.filereadable(flutter_adapter) == 1 and vim.fn.executable("flutter") == 1 then
+      if flutter_bin ~= "" then
         dap.adapters.dart = {
           type = "executable",
-          command = flutter_adapter,
-        }
-      elseif vim.fn.executable("flutter") == 1 then
-        dap.adapters.dart = {
-          type = "executable",
-          command = "flutter",
+          command = flutter_bin,
           args = { "--suppress-analytics", "debug_adapter" },
+          options = {
+            env = env_list({
+              CI = "true",
+              FLUTTER_SUPPRESS_ANALYTICS = "true",
+            }),
+          },
         }
-      else
+      elseif dart_bin ~= "" then
         dap.adapters.dart = {
           type = "executable",
-          command = "dart",
+          command = dart_bin,
           args = { "debug_adapter" },
         }
       end
@@ -140,10 +155,24 @@ return {
         vim.keymap.set("n", lhs, rhs, { desc = desc })
       end
 
-      map("<leader>dd", function()
-        refresh_go_workspace_config()
-        dap.continue()
-      end, "DAP: start/continue")
+      local original_run_last = dap.run_last
+      dap.run_last = function()
+        local session = dap.session()
+        if session and session.config and session.config.type == "go" then
+          local config = session.config
+          dap.terminate({
+            on_done = function()
+              vim.schedule(function()
+                dap.run(config, { new = true })
+              end)
+            end,
+          })
+          return
+        end
+        original_run_last()
+      end
+
+      map("<leader>dd", dap.continue, "DAP: start/continue")
       map("<leader>db", dap.toggle_breakpoint, "DAP: toggle breakpoint")
       map("<leader>dB", function()
         dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))

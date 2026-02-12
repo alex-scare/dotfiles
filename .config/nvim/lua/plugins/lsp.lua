@@ -173,6 +173,14 @@ return {
         end
       })
 
+      -- Format on save (Dart)
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        pattern = "*.dart",
+        callback = function()
+          vim.lsp.buf.format({ async = false })
+        end,
+      })
+
       -- Color virtual text
       vim.api.nvim_create_autocmd("ColorScheme", {
         callback = set_diag_hl,
