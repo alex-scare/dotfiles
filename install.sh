@@ -25,7 +25,7 @@ i_pacman() {
 }
 
 i_yay() {
-  sudo yay -S --needed --noconfirm "$@"
+  yay -S --needed --noconfirm "$@"
 }
 
 install_yay() {
