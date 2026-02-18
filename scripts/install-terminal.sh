@@ -25,12 +25,16 @@ set_default_shell() {
 step "Installing terminal tools and font"
 sudo pacman -S --needed --noconfirm ghostty neovim zsh stow ttf-jetbrains-mono-nerd
 
+step "Installing starship"
+yay -S --needed --noconfirm starship
+
 step "Setting default shell to zsh"
 set_default_shell
 
 step "Stowing terminal/editor dotfiles"
 stow --restow -t "$HOME" nvim
 stow --restow -t "$HOME" ghostty
+stow --restow -t "$HOME" starship
 stow --restow -t "$HOME" tmux
 stow --restow -t "$HOME" zsh
 
