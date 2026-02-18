@@ -45,20 +45,70 @@ install_yay() {
   rm -rf "$tmpdir"
 }
 
+install_jetbrains_nerd_font() {
+  if pacman -Qi ttf-jetbrains-mono-nerd >/dev/null 2>&1; then
+    echo "JetBrains Nerd Font already installed, skipping."
+    return
+  fi
+
+  echo "Installing JetBrains Nerd Font..."
+  i_pacman ttf-jetbrains-mono-nerd
+}
+
+set_default_shell() {
+  local current_shell
+  current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+
+  if [[ "$current_shell" == "/usr/bin/zsh" ]]; then
+    echo "Default shell is already /usr/bin/zsh, skipping."
+    return
+  fi
+
+  chsh -s /usr/bin/zsh
+}
+
+stow_package() {
+  local pkg="$1"
+
+  if [[ -d "$pkg" ]]; then
+    stow --restow -t "$HOME" "$pkg"
+    return
+  fi
+
+  echo "Skipping stow for '$pkg' (directory not found)."
+}
+
 ##### Basic functionality
 
 step "Installing base packages"
 i_pacman wget base-devel stow git
+
+step "Installing yay (AUR helper)"
+install_yay
 
 ##### Prepare terminal
 
 step "Installing terminal tools"
 i_pacman ghostty neovim zsh
 
+step "Installing JetBrains Nerd Font"
+install_jetbrains_nerd_font
+
+step "Setting default shell to zsh"
+set_default_shell
+
+step "Stowing terminal/editor dotfiles"
+stow_package nvim
+stow_package ghostty
+stow_package tmux
+
 ##### Prepare hyprland
 
 step "Installing Hyprland packages"
 i_pacman hyprland hyprpaper waybar
+
+step "Stowing Hyprland dotfiles"
+stow_package hyprland
 
 ##### Fix nvidia drivers 
 
@@ -69,16 +119,7 @@ i_pacman nvidia-settings nvidia-utils nvidia-open-dkms gamemode linux-headers
 
 step "Installing extra apps"
 i_pacman proton-vpn-gtk-app
-install_yay
 i_yay brave-bin
-
-##### Stow configs
-
-step "Stowing dotfiles"
-stow --restow -t "$HOME" nvim
-stow --restow -t "$HOME" hyprland
-stow --restow -t "$HOME" ghostty
-stow --restow -t "$HOME" tmux
 
 echo
 echo "Done."
