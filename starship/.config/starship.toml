@@ -55,6 +55,13 @@ disabled = true
 [openstack]
 disabled = true
 
+[custom.symlink]
+when = '[[ "$PWD" != "$(pwd -P)" ]]'
+command = 'echo "symlink"'
+format = '[🔗 $output]($style) '
+style = 'bold blue1'
+shell = ["zsh", "--no-rcs"]
+
 
 
 # left
