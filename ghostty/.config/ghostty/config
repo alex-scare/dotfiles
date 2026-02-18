@@ -1,5 +1,5 @@
 font-family = "JetBrains Mono Regular Regular"
 cursor-style = block
-theme = dark:Catppuccin Frappe, light:Rose Pine Dawn
+theme = dark:Catppuccin Frappe 
 keybind = shift+enter=text:\x1b\r
 window-decoration = none
