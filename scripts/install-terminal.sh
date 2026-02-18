@@ -32,6 +32,7 @@ step "Stowing terminal/editor dotfiles"
 stow --restow -t "$HOME" nvim
 stow --restow -t "$HOME" ghostty
 stow --restow -t "$HOME" tmux
+stow --restow -t "$HOME" zsh
 
 echo
 echo "Terminal setup done."
