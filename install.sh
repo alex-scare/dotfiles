@@ -44,6 +44,9 @@ install_yay() {
 
 ##### Basic functionality
 
+step "Enabling multilib repository"
+bash "$SCRIPT_DIR/scripts/enable-multilib.sh"
+
 step "Installing base packages"
 i_pacman wget base-devel stow git
 
@@ -56,15 +59,27 @@ bash "$SCRIPT_DIR/scripts/install-terminal.sh"
 ##### Prepare hyprland
 
 step "Installing Hyprland packages"
-i_pacman hyprland hyprpaper waybar
+i_pacman hyprland hyprpaper waybar rofi
 
 step "Stowing Hyprland dotfiles"
 stow --restow -t "$HOME" hyprland
+stow --restow -t "$HOME" hyprpaper
+stow --restow -t "$HOME" waybar
+stow --restow -t "$HOME" backgrounds
+stow --restow -t "$HOME" rofi
 
 ##### Fix nvidia drivers 
 
 step "Installing NVIDIA-related packages"
-i_pacman nvidia-settings nvidia-utils nvidia-open-dkms gamemode linux-headers
+i_pacman nvidia-settings nvidia-utils nvidia-open-dkms gamemode linux-headers lib32-nvidia-utils egl-wayland
+
+step "Rebuilding initramfs"
+sudo mkinitcpio -P
+
+##### Install steam
+
+step "Installing Steam"
+i_pacman steam
 
 ##### Install useful stuff
 

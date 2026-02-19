@@ -31,7 +31,7 @@ set_default_shell() {
 # Main flow
 
 step "Installing terminal tools"
-sudo pacman -S --needed --noconfirm ghostty neovim zsh fzf stow ttf-jetbrains-mono-nerd
+sudo pacman -S --needed --noconfirm ghostty alacritty neovim zsh fzf stow ttf-jetbrains-mono-nerd
 yay -S --needed --noconfirm starship
 
 step "Setting default shell to zsh"
@@ -43,6 +43,7 @@ stow --restow -t "$HOME" ghostty
 stow --restow -t "$HOME" starship
 stow --restow -t "$HOME" tmux
 stow --restow -t "$HOME" zsh
+stow --restow -t "$HOME" alacritty
 
 echo
 echo "Terminal setup done."
