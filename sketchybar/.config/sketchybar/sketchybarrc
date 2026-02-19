@@ -21,7 +21,7 @@ default=(
   label.color=0xffffffff
   icon.align=center
   label.align=center
-  icon.y_offset=0
+  icon.y_offset=-0.5
   label.y_offset=0
   icon.padding_left=0
   icon.padding_right=2
@@ -54,7 +54,6 @@ sketchybar --add item space.current left \
            icon.font="JetBrainsMono Nerd Font:ExtraBold:18.0" \
            padding_left=0 \
            padding_right=4 \
-           icon.y_offset=-1 \
            icon.padding_left=1 \
            icon.padding_right=1 \
            --add item front_app left \
@@ -76,20 +75,16 @@ sketchybar --add item clock center \
 
 
 ##### Adding Right Items #####
-# Some items refresh on a fixed cycle, e.g. the clock and bluetooth script.
-# Other items can also respond to events they subscribe to (like volume_change).
 # More info about the event system can be found here:
 # https://felixkratz.github.io/SketchyBar/config/events
 
 sketchybar --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            icon.font="Hack Nerd Font:Bold:14.0" \
-           icon.y_offset=-1 \
            --subscribe battery system_woke power_source_change \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" update_freq=5 \
            --subscribe volume volume_change \
-           icon.y_offset=-1 \
            --add item keyboard_layout right \
            --set keyboard_layout update_freq=1 \
            script="$PLUGIN_DIR/keyboard_layout.sh" \

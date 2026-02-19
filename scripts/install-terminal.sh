@@ -28,10 +28,10 @@ set_default_shell() {
   chsh -s /usr/bin/zsh
 }
 
-step "Installing terminal tools and font"
-sudo pacman -S --needed --noconfirm ghostty neovim zsh stow ttf-jetbrains-mono-nerd
+# Main flow
 
-step "Installing starship"
+step "Installing terminal tools"
+sudo pacman -S --needed --noconfirm ghostty neovim zsh fzf stow ttf-jetbrains-mono-nerd
 yay -S --needed --noconfirm starship
 
 step "Setting default shell to zsh"
