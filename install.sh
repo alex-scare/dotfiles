@@ -2,13 +2,12 @@
 
 set -euo pipefail
 
-if [[ "$(uname -s)" != "Linux" ]]; then
-  echo "This script is intended for Arch Linux."
-  exit 1
-fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+source "$SCRIPT_DIR/scripts/lib/os.sh"
 
-if ! command -v pacman >/dev/null 2>&1; then
-  echo "pacman not found. This script is intended for Arch Linux."
+if ! isArch; then
+  echo "This script is intended for Arch Linux."
   exit 1
 fi
 
@@ -16,9 +15,6 @@ if [[ $EUID -eq 0 ]]; then
   echo "Run this script as your normal user (it will use sudo when needed)."
   exit 1
 fi
-
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
 
 step() {
   echo
