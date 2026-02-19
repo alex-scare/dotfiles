@@ -31,7 +31,7 @@ set_default_shell() {
 # Main flow
 
 step "Installing terminal tools"
-sudo pacman -S --needed --noconfirm ghostty alacritty neovim zsh fzf stow ttf-jetbrains-mono-nerd
+sudo pacman -S --needed --noconfirm ghostty alacritty github-cli neovim zsh fzf stow ttf-jetbrains-mono-nerd
 yay -S --needed --noconfirm starship
 
 step "Setting default shell to zsh"
