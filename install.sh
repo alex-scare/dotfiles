@@ -48,7 +48,7 @@ step "Enabling multilib repository"
 bash "$SCRIPT_DIR/scripts/enable-multilib.sh"
 
 step "Installing base packages"
-i_pacman wget base-devel stow git
+i_pacman wget base-devel stow git brightnessctl
 
 step "Installing yay (AUR helper)"
 install_yay
@@ -71,7 +71,8 @@ stow --restow -t "$HOME" rofi
 ##### Fix nvidia drivers 
 
 step "Installing NVIDIA-related packages"
-i_pacman nvidia-settings nvidia-utils nvidia-open-dkms gamemode linux-headers lib32-nvidia-utils egl-wayland
+i_pacman nvidia-settings nvidia-utils nvidia-open-dkms \
+         gamemode linux-headers lib32-nvidia-utils egl-wayland
 
 step "Rebuilding initramfs"
 sudo mkinitcpio -P
