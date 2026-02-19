@@ -13,20 +13,20 @@ sketchybar --bar position=top height=28 blur_radius=4 color=0xCC000000 margin=0
 # https://felixkratz.github.io/SketchyBar/config/items
 
 default=(
-  padding_left=0
-  padding_right=0
-  icon.font="JetBrainsMono Nerd Font:Bold:14.0"
+  padding_left=6
+  padding_right=6
+  icon.font="JetBrainsMono Nerd Font:Bold:16.0"
   label.font="JetBrainsMono Nerd Font:Bold:14.0"
   icon.color=0xffffffff
   label.color=0xffffffff
   icon.align=center
   label.align=center
-  icon.y_offset=1
+  icon.y_offset=0
   label.y_offset=0
-  icon.padding_left=4
-  icon.padding_right=4
-  label.padding_left=4
-  label.padding_right=4
+  icon.padding_left=0
+  icon.padding_right=2
+  label.padding_left=2
+  label.padding_right=0
 )
 sketchybar --default "${default[@]}"
 
@@ -51,9 +51,10 @@ sketchybar --add item space.current left \
            script="$CONFIG_DIR/plugins/aerospace.sh" \
            --add item chevron left \
            --set chevron icon="󰅂" label.drawing=off \
-           icon.font="Symbols Nerd Font Mono:Regular:18.0" \
+           icon.font="JetBrainsMono Nerd Font:ExtraBold:18.0" \
            padding_left=0 \
            padding_right=4 \
+           icon.y_offset=-1 \
            icon.padding_left=1 \
            icon.padding_right=1 \
            --add item front_app left \
@@ -83,14 +84,24 @@ sketchybar --add item clock center \
 sketchybar --add item battery right \
            --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
            icon.font="Hack Nerd Font:Bold:14.0" \
+           icon.y_offset=-1 \
            --subscribe battery system_woke power_source_change \
            --add item volume right \
            --set volume script="$PLUGIN_DIR/volume.sh" update_freq=5 \
            --subscribe volume volume_change \
+           icon.y_offset=-1 \
            --add item keyboard_layout right \
            --set keyboard_layout update_freq=1 \
            script="$PLUGIN_DIR/keyboard_layout.sh" \
-           icon="󰌌" 
+           icon.drawing=off \
+           label.font="JetBrainsMono Nerd Font:ExtraBold:12.0" \
+           label.color=0xff000000 \
+           label.padding_left=4 \
+           label.padding_right=4 \
+           background.drawing=on \
+           background.color=0xffffffff \
+           background.corner_radius=2 \
+           background.height=14
 
 ##### Force all scripts to run the first time (never do this in a script) #####
 sketchybar --update
