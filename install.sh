@@ -73,7 +73,7 @@ bash "$SCRIPT_DIR/scripts/setup-rofi.sh"
 ##### Fix nvidia drivers 
 
 step "Installing NVIDIA-related packages"
-i_pacman nvidia-settings nvidia-utils nvidia-open-dkms \
+i_pacman nvidia-settings nvidia-utils nvidia-open-dkms dkms \
          gamemode linux-headers lib32-nvidia-utils egl-wayland
 
 step "Rebuilding initramfs"
