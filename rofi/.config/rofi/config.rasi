@@ -1,7 +1,17 @@
 configuration{
     modi: "drun";
-    icon-theme: "Oranchelo";
+    drun {
+        display-name: " ";
+    }
+    timeout {
+        delay: 5;
+        action: "kb-cancel";
+    }
+    me-select-entry: "";
+    icon-theme: "Papirus";
     show-icons: true;
+    fixed-num-lines: false;
+    font: "JetBrainsMono Nerd Font Bold 9";
     terminal: "alacritty";
     drun-display-format: "{icon} {name}";
     location: 0;
