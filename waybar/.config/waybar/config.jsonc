@@ -14,34 +14,48 @@
       "warning": 30,
       "critical": 15
     },
-    "format": "<span size='13000'>{icon} </span> {capacity}%",
-    "format-warning": "<span size='13000'>{icon} </span> {capacity}%",
-    "format-critical": "<span size='13000'>{icon} </span> {capacity}%",
-    "format-charging": "<span size='13000'> </span>{capacity}%",
-    "format-plugged": "<span size='13000'> </span>{capacity}%",
+    "format": "<span size='13000'>{icon} </span>{capacity}",
+    "format-warning": "<span size='13000'>{icon} </span>{capacity}",
+    "format-critical": "<span size='13000'>{icon} </span>{capacity}",
+    "format-charging": "<span size='13000'> </span>{capacity}",
+    "format-plugged": "<span size='13000'> </span>{capacity}",
     "format-alt": "<span size='13000'>{icon} </span> {time}",
-    "format-full": "<span size='13000'> </span>{capacity}%",
+    "format-full": "<span size='13000'> </span>{capacity}",
     "format-icons": ["", "", "", "", ""],
     "tooltip-format": "{time}"
   },
   "network": {
-    "format-wifi": "<span size='13000'>  </span>{signalStrength}%",
-    "format-ethernet": "<span size='13000'>󰤭  </span> Disconnected",
-    "format-linked": "{ifname} (No IP) ",
-    "format-disconnected": "<span size='13000'>  </span>Disconnected",
-    "tooltip-format-wifi": "Signal Strenght: {signalStrength}%"
+    "format": "{ifname}",
+    "format-wifi": " ",
+    "format-ethernet": " ",
+    "format-disconnected": "Disconnected",
+    "tooltip-format": " {ifname} via {gwaddr}",
+    "tooltip-format-wifi": "  {ifname} @ {essid}\nIP: {ipaddr}\nStrength: {signalStrength}%\nFreq: {frequency}MHz\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
+    "tooltip-format-ethernet": " {ifname}\nIP: {ipaddr}\nUp: {bandwidthUpBits} Down: {bandwidthDownBits}",
+    "tooltip-format-disconnected": "Disconnected",
+    "max-length": 50
   },
   "pulseaudio": {
-      "format": "{icon}  {volume}%",
-      "format-muted": "  muted",
+      "format": "{icon}{volume}",
+      "format-bluetooth": "{icon} 󰂯 {volume}",
+      "format-bluetooth-muted": "󰖁 {icon} 󰂯",
+      "format-muted": "󰖁  ",
+      "format-source": "{volume} 󰍬",
+      "format-source-muted": "󰍭 ",
       "format-icons": {
-          "default": ["", "", ""]
+          "headphone": "󰋋 ",
+          "hands-free": "󰋎 ",
+          "headset": "󰋎 ",
+          "phone": "󰏲 ",
+          "portable": "󰏲 ",
+          "car": "󰄋 ",
+          "default": ["󰕿 ", "󰖀 ", "󰕾 "]
       },
       "on-click": "pavucontrol"
   },
   "backlight": {
     "device": "intel_backlight",
-    "format": "<span size='15000'>{icon}</span> {percent}%",
+    "format": "<span size='15000'>{icon}</span> {percent}",
     "format-icons": [ "🌕︎", "🌔︎",  "🌓︎","🌒︎", "🌑︎"]
   }
 }
