@@ -67,6 +67,8 @@ stow --restow -t "$HOME" hyprpaper
 stow --restow -t "$HOME" waybar
 stow --restow -t "$HOME" backgrounds
 stow --restow -t "$HOME" rofi
+step "Applying rofi drun hides"
+bash "$SCRIPT_DIR/scripts/setup-rofi.sh"
 
 ##### Fix nvidia drivers 
 
