@@ -59,7 +59,7 @@ bash "$SCRIPT_DIR/scripts/install-terminal.sh"
 ##### Prepare hyprland
 
 step "Installing Hyprland packages"
-i_pacman hyprland hyprpaper waybar rofi blueman
+i_pacman hyprland hyprpaper waybar rofi blueman pavucontrol
 
 step "Stowing Hyprland dotfiles"
 stow --restow -t "$HOME" hyprland

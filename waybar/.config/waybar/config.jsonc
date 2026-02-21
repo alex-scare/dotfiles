@@ -63,7 +63,8 @@
           "car": "󰄋 ",
           "default": ["󰕿 ", "󰖀 ", "󰕾 "]
       },
-      "on-click": "pavucontrol"
+      "on-click": "$HOME/.config/waybar/scripts/audio-output.sh",
+      "on-click-right": "pavucontrol"
   },
   "backlight": {
     "device": "intel_backlight",
