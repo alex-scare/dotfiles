@@ -18,22 +18,34 @@ return {
         {
           type = "text",
           val = {
-            "Most good programmers do programming",
-            "not because they expect to get paid or get adulation by the public,",
-            "but because it is fun to program",
+            [[       ,                              ]],
+            [[       \`-._           __             ]],
+            [[        \\  \-..____,.'  `.           ]],
+            [[         :  )       :      :\         ]],
+            [[          ;'        '   ;  | :        ]],
+            [[          )..      .. .:.`.; :        ]],
+            [[         /::...  .:::...   ` ;        ]],
+            [[         `:o>   /\o_>        : `.     ]],
+            [[        `-`.__ ;   __..--- /:.   \    ]],
+            [[        === \_/   ;=====_.':.     ;   ]],
+            [[         ,/'`--'...`--....        ;   ]],
+            [[              ;                    ;  ]],
+            [[          . '                       ; ]],
+            [[        .'     ..     ,      .       ;]],
+            [[       :       ::..  /      ;::.     |]],
+            [[      /      `.;::.  |       ;:..    ;]],
+            [[     :         |:.   :       ;:.    ; ]],
+            [[     :         ::     ;:..   |.    ;  ]],
+            [[      :       :;      :::....|     |  ]],
+            [[      /\     ,/ \      ;:::::;     ;  ]],
+            [[    .:. \:..|    :     ; '.--|     ;  ]],
+            [[   ::.  :''  `-.,,;     ;'   ;     ;  ]],
+            [[.-'. _.'\      / `;      \,__:      \ ]],
+            [[`---'    `----'   ;      /    \,.,,,/ ]],
+            [[                   `----`             ]],
+            [[                                      ]]
           },
-          opts = { position = "center", hl = "Statement" },
-        },
-        {
-          type = "padding",
-          val = 1,
-        },
-        {
-          type = "text",
-          val = {
-            "— Linus Torvalds",
-          },
-          opts = { position = "center", hl = "Comment" },
+          opts = { position = "center", },
         },
       },
     }
@@ -41,7 +53,7 @@ return {
     -- add spacing before content
     table.insert(dashboard.config.layout, 1, {
       type = "padding",
-      val = math.floor(vim.o.lines * 0.25),
+      val = math.floor(vim.o.lines * 0.1),
     })
 
     table.insert(dashboard.config.layout, #dashboard.config.layout, quote)
