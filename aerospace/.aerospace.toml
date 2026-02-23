@@ -30,9 +30,8 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 automatically-unhide-macos-hidden-apps = true
 
 # List of workspaces that should stay alive even when they contain no windows.
-persistent-workspaces = ["1", "2", "3", "4", "5", 
-                         "Q", "W", "E", "R", "T",
-                         "A"] 
+persistent-workspaces = ["1", "2", "3", "4", "5", "6",
+                         "Q", "W", "E"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -93,7 +92,6 @@ on-mode-changed = []
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
-    alt-comma = 'layout accordion horizontal vertical'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
     alt-h = 'focus left'
@@ -117,12 +115,10 @@ on-mode-changed = []
     alt-3 = 'workspace 3'
     alt-4 = 'workspace 4'
     alt-5 = 'workspace 5'
-    alt-a = 'workspace A' # In your config, you can drop workspace bindings that you don't need
-    alt-e = 'workspace E'
+    alt-6 = 'workspace 6'
     alt-q = 'workspace Q'
-    alt-r = 'workspace R'
-    alt-t = 'workspace T'
     alt-w = 'workspace W'
+    alt-e = 'workspace E'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -130,12 +126,10 @@ on-mode-changed = []
     alt-shift-3 = 'move-node-to-workspace 3'
     alt-shift-4 = 'move-node-to-workspace 4'
     alt-shift-5 = 'move-node-to-workspace 5'
-    alt-shift-a = 'move-node-to-workspace A'
-    alt-shift-e = 'move-node-to-workspace E'
+    alt-shift-6 = 'move-node-to-workspace 6'
     alt-shift-q = 'move-node-to-workspace Q'
-    alt-shift-r = 'move-node-to-workspace R'
-    alt-shift-t = 'move-node-to-workspace T'
     alt-shift-w = 'move-node-to-workspace W'
+    alt-shift-e = 'move-node-to-workspace E'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -167,7 +161,7 @@ on-mode-changed = []
 
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
-run = "move-node-to-workspace Q"
+run = "move-node-to-workspace 1"
 
 [[on-window-detected]]
 if.app-id = "ru.keepcoder.Telegram"
@@ -179,15 +173,11 @@ run = "move-node-to-workspace 4"
 
 [[on-window-detected]]
 if.app-id = "com.apple.iphonesimulator"
-run = "move-node-to-workspace A"
+run = "move-node-to-workspace Q"
 
 [[on-window-detected]]
 if.app-id = "com.brave.Browser"
 run = "move-node-to-workspace 2"
-
-[[on-window-detected]]
-if.app-id = "com.apple.finder"
-run = "move-node-to-workspace 1"
 
 [[on-window-detected]]
 if.app-id = "com.spotify.client"
