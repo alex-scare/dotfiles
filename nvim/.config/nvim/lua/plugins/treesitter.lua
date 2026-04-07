@@ -7,12 +7,32 @@ return {
   lazy = false,
   event = { "BufReadPost", "BufNewFile" },
   config = function()
-    local treesitter = require("nvim-treesitter")
-    treesitter.install({ "lua", "dart", "go" })
+    require("nvim-treesitter").setup({
+      install_dir = vim.fn.stdpath("data") .. "/site",
+    })
 
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = { 'go', 'lua', 'dart' },
-      callback = function() vim.treesitter.start() end,
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = {
+        "bash",
+        "css",
+        "dart",
+        "go",
+        "gomod",
+        "gowork",
+        "html",
+        "javascript",
+        "javascriptreact",
+        "json",
+        "lua",
+        "markdown",
+        "typescript",
+        "typescriptreact",
+        "yaml",
+      },
+      callback = function(ev)
+        vim.treesitter.start(ev.buf)
+        vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
     })
 
     require("treesitter-context").setup({})

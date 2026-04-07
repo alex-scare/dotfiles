@@ -1,12 +1,56 @@
 return {
   {
+    "nvim-neotest/nvim-nio",
+    lazy = false,
+  },
+  {
     "mfussenegger/nvim-dap",
     dependencies = {
       "nvim-neotest/nvim-nio",
+      "mxsdev/nvim-dap-vscode-js",
     },
     config = function()
       local dap = require("dap")
       local uv = vim.uv or vim.loop
+      local dap_vscode_js = require("dap-vscode-js")
+
+      local function ensure_mason_package(name)
+        local ok, registry = pcall(require, "mason-registry")
+        if not ok then
+          return
+        end
+
+        local function install_if_needed()
+          local pkg_ok, pkg = pcall(registry.get_package, name)
+          if pkg_ok and not pkg:is_installed() then
+            pkg:install()
+          end
+        end
+
+        if registry.refresh then
+          registry.refresh(install_if_needed)
+        else
+          install_if_needed()
+        end
+      end
+
+      ensure_mason_package("js-debug-adapter")
+
+      dap_vscode_js.setup({
+        debugger_cmd = { "js-debug-adapter" },
+        adapters = {
+          "node-terminal",
+          "pwa-node",
+        },
+      })
+      dap.adapters.node = function(callback, config)
+        local adapter = dap.adapters["pwa-node"]
+        if type(adapter) == "function" then
+          adapter(callback, config)
+        else
+          callback(adapter)
+        end
+      end
 
       dap.adapters.go = function(callback, client_config)
         local host = (client_config and client_config.host) or "127.0.0.1"
@@ -222,6 +266,44 @@ return {
           command = dart_bin,
           args = { "debug_adapter" },
         }
+      end
+
+      local node_languages = {
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+      }
+
+      local node_configurations = {
+        {
+          type = "pwa-node",
+          request = "launch",
+          name = "Node: Launch current file",
+          program = "${file}",
+          cwd = "${workspaceFolder}",
+        },
+        {
+          type = "pwa-node",
+          request = "attach",
+          name = "Node: Attach to process",
+          processId = require("dap.utils").pick_process,
+          cwd = "${workspaceFolder}",
+        },
+        {
+          type = "node-terminal",
+          request = "launch",
+          name = "Node Terminal: Run command",
+          cwd = "${workspaceFolder}",
+          command = function()
+            local default = "node " .. vim.fn.expand("%:p")
+            return vim.fn.input("Node terminal command: ", default)
+          end,
+        },
+      }
+
+      for _, language in ipairs(node_languages) do
+        dap.configurations[language] = vim.deepcopy(node_configurations)
       end
 
       local map = function(lhs, rhs, desc)

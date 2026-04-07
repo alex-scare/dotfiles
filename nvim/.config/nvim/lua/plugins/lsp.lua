@@ -41,9 +41,89 @@ local diagnostic_config = {
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+local prettier_filetypes = {
+  css = true,
+  html = true,
+  javascript = true,
+  javascriptreact = true,
+  json = true,
+  jsonc = true,
+  markdown = true,
+  scss = true,
+  typescript = true,
+  typescriptreact = true,
+  yaml = true,
+}
+
+local function has_formatter(bufnr)
+  return next(vim.lsp.get_clients({
+    bufnr = bufnr,
+    method = "textDocument/formatting",
+  })) ~= nil
+end
+
+local function format_with_prettier(bufnr)
+  local prettier = vim.fn.exepath("prettier")
+  if prettier == "" then
+    return false
+  end
+
+  local filetype = vim.bo[bufnr].filetype
+  if not prettier_filetypes[filetype] then
+    return false
+  end
+
+  local filename = vim.api.nvim_buf_get_name(bufnr)
+  if filename == "" then
+    return false
+  end
+
+  local input = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
+  if vim.bo[bufnr].endofline then
+    input = input .. "\n"
+  end
+
+  local output = vim.fn.system({ prettier, "--stdin-filepath", filename }, input)
+  if vim.v.shell_error ~= 0 then
+    vim.notify("Prettier failed for " .. filename, vim.log.levels.WARN, { title = "Format" })
+    return false
+  end
+
+  if output == input then
+    return true
+  end
+
+  local view = vim.fn.winsaveview()
+  local lines = vim.split(output, "\n", { plain = true })
+  if lines[#lines] == "" then
+    table.remove(lines, #lines)
+  end
+
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+  vim.bo[bufnr].modified = true
+  vim.fn.winrestview(view)
+  return true
+end
+
+local function format_buffer(bufnr)
+  if not vim.api.nvim_buf_is_valid(bufnr) or not vim.bo[bufnr].modifiable then
+    return
+  end
+
+  if format_with_prettier(bufnr) then
+    return
+  end
+
+  if has_formatter(bufnr) then
+    vim.lsp.buf.format({ async = false, bufnr = bufnr })
+  end
+end
+
 -- servers: https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
 local servers = {
-  bashls = {},
+  bashls = {
+    capabilities = capabilities,
+  },
 
   lua_ls = {
     capabilities = capabilities,
@@ -67,10 +147,8 @@ local servers = {
     filetypes = {
       "javascript",
       "javascriptreact",
-      "javascript.jsx",
       "typescript",
       "typescriptreact",
-      "typescript.tsx",
     },
     init_options = {
       hostInfo = "neovim",
@@ -127,6 +205,33 @@ return {
   {
     "mason-org/mason.nvim",
     opts = {},
+    config = function(_, opts)
+      require("mason").setup(opts)
+
+      local registry = require("mason-registry")
+      local packages = {
+        "bash-language-server",
+        "golangci-lint-langserver",
+        "gopls",
+        "lua-language-server",
+        "typescript-language-server",
+      }
+
+      local function ensure_installed()
+        for _, name in ipairs(packages) do
+          local ok, pkg = pcall(registry.get_package, name)
+          if ok and not pkg:is_installed() then
+            pkg:install()
+          end
+        end
+      end
+
+      if registry.refresh then
+        registry.refresh(ensure_installed)
+      else
+        ensure_installed()
+      end
+    end,
   },
 
   -- LSPs -------------------------------------------------
@@ -159,27 +264,10 @@ return {
       end
       vim.lsp.enable(enable_list)
 
-      -- Format on save (Lua)
+      -- Format on save
       vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.lua",
-        callback = function()
-          vim.lsp.buf.format({ async = false })
-        end,
-      })
-
-      -- Format on save (Golang)
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = '*.go',
-        callback = function()
-          vim.lsp.buf.format({ async = false })
-        end
-      })
-
-      -- Format on save (Dart)
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.dart",
-        callback = function()
-          vim.lsp.buf.format({ async = false })
+        callback = function(ev)
+          format_buffer(ev.buf)
         end,
       })
 
@@ -196,6 +284,9 @@ return {
       vim.keymap.set("n", "<leader>R", function()
         vim.cmd("!go run " .. vim.fn.shellescape(vim.fn.expand("%:p")))
       end)
+      vim.keymap.set("n", "<leader>f", function()
+        format_buffer(vim.api.nvim_get_current_buf())
+      end, { desc = "Format current buffer" })
     end,
   },
 }

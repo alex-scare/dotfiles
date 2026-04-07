@@ -2,11 +2,12 @@ config-version = 2
 start-at-login = true
 
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = ['exec-and-forget sketchybar']
+# SketchyBar is installed via dotfiles, but not auto-started by AeroSpace.
+after-startup-command = []
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+    'pgrep -x sketchybar >/dev/null && sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
 ]
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
@@ -56,7 +57,7 @@ on-mode-changed = []
     inner.vertical =   4
     outer.left =       0
     outer.bottom =     0
-    outer.top =        28 # Sketchybar height
+    outer.top =        0 # no extra top gap without SketchyBar
     outer.right =      0
 
 # 'main' binding mode declaration
