@@ -26,6 +26,20 @@ ff() {
   nvim "$file"
 }
 
+killport() {
+  for port in "$@"; do
+    pids=$(lsof -tiTCP:"$port" -sTCP:LISTEN)
+
+    if [ -z "$pids" ]; then
+      echo "No process listening on port $port"
+      continue
+    fi
+
+    echo "Killing port $port: $pids"
+    kill -9 $pids
+  done
+}
+
 if [[ -f "/opt/homebrew/opt/fzf/shell/completion.zsh" ]]; then
   source "/opt/homebrew/opt/fzf/shell/completion.zsh"
 elif [[ -f "/usr/share/fzf/completion.zsh" ]]; then
