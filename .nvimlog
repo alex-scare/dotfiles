@@ -1,0 +1,12 @@
+WRN 2026-04-24T13:10:46.637 ?.98966    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/O7ZOND/nvim.98966.0
+WRN 2026-04-24T13:10:46.639 ?.98967    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/tbR47Z/nvim.98967.0
+WRN 2026-04-24T13:10:58.566 ?.99008    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/hN2LM7/nvim.99008.0
+WRN 2026-04-24T13:11:03.867 ?.99016    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/S4liNq/nvim.99016.0
+WRN 2026-04-24T13:13:41.713 ?.99322    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/ZEMXR1/nvim.99322.0
+WRN 2026-04-24T13:21:08.896 ?.1970     server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/MVLOHl/nvim.1970.0
+WRN 2026-04-24T13:21:08.896 ?.1971     server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/BSY3yk/nvim.1971.0
+WRN 2026-04-24T13:23:16.356 ?.2752     server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/uGdlkO/nvim.2752.0
+WRN 2026-04-24T13:37:13.233 ?.6580     server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/K7SG4t/nvim.6580.0
+WRN 2026-04-24T13:44:59.139 ?.9246     server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/YFjMOg/nvim.9246.0
+WRN 2026-04-24T13:50:05.027 ?.11887    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/VDOJLc/nvim.11887.0
+WRN 2026-04-24T13:50:26.444 ?.11945    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/DN60Ka/nvim.11945.0

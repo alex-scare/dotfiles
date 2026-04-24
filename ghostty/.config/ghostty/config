@@ -2,4 +2,5 @@ font-family = "JetBrainsMono Nerd Font Mono"
 cursor-style = block
 theme = Catppuccin Frappe
 keybind = shift+enter=text:\x1b\r
+keybind = ctrl+alt+shift+y=text:\x1b[121;8u
 window-decoration = none

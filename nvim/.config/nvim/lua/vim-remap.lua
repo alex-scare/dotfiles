@@ -38,5 +38,6 @@ map("n", "]d", vim.diagnostic.goto_next, "Diagnostics: next")
 
 map("n", "<leader>m", "<cmd>only<CR>", "Window: only (close others)")
 
-vim.keymap.set({ "n", "v" }, "<leader>y", '"+y', { noremap = true, silent = true, desc = "Copy to System [C]lipboard" })
-vim.keymap.set("n", "<leader>Y", '"+yy', { noremap = true, silent = true, desc = "Copy Line to System Clipboard" })
+for _, lhs in ipairs({ "\27[121;8u", "<M-C-Y>", "<M-C-S-Y>" }) do
+  vim.keymap.set({ "n", "v" }, lhs, '"+y', { noremap = true, silent = true, desc = "Copy to System Clipboard" })
+end

@@ -31,8 +31,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 automatically-unhide-macos-hidden-apps = true
 
 # List of workspaces that should stay alive even when they contain no windows.
-persistent-workspaces = ["1", "2", "3", "4", "5", "6",
-                         "Q", "W", "E"]
+persistent-workspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -117,9 +116,9 @@ on-mode-changed = []
     alt-4 = 'workspace 4'
     alt-5 = 'workspace 5'
     alt-6 = 'workspace 6'
-    alt-q = 'workspace Q'
-    alt-w = 'workspace W'
-    alt-e = 'workspace E'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
@@ -128,9 +127,9 @@ on-mode-changed = []
     alt-shift-4 = 'move-node-to-workspace 4'
     alt-shift-5 = 'move-node-to-workspace 5'
     alt-shift-6 = 'move-node-to-workspace 6'
-    alt-shift-q = 'move-node-to-workspace Q'
-    alt-shift-w = 'move-node-to-workspace W'
-    alt-shift-e = 'move-node-to-workspace E'
+    alt-shift-7 = 'move-node-to-workspace 7'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
@@ -147,7 +146,7 @@ on-mode-changed = []
 [mode.service.binding]
     esc = ['reload-config', 'mode main']
     r = ['flatten-workspace-tree', 'mode main'] # reset layout
-    f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
+    f = ['layout tiling', 'layout tiles', 'mode main'] # force tiling
     backspace = ['close-all-windows-but-current', 'mode main']
 
     # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
@@ -159,6 +158,10 @@ on-mode-changed = []
     alt-shift-l = ['join-with right', 'mode main']
 
 ##### Customised
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = "layout tiling"
 
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
@@ -174,11 +177,11 @@ run = "move-node-to-workspace 3"
 
 [[on-window-detected]]
 if.app-id = "com.apple.iphonesimulator"
-run = "move-node-to-workspace Q"
+run = ["layout tiling", "move-node-to-workspace 1"]
 
 [[on-window-detected]]
 if.app-id = "com.brave.Browser"
-run = "move-node-to-workspace 2"
+run = ["layout tiling", "move-node-to-workspace 2"]
 
 [[on-window-detected]]
 if.app-id = "com.spotify.client"
