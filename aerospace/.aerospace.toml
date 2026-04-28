@@ -80,6 +80,10 @@ on-mode-changed = []
 
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
+    # Disable macOS minimize (cmd-m). Keep the binding as a no-op so macOS
+    # does not receive the shortcut and send windows to the Dock.
+    cmd-m = 'mode main'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
     # You can uncomment the following lines to open up terminal with alt + enter shortcut
     # (like in i3)

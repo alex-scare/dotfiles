@@ -31,6 +31,10 @@ local map = function(mode, lhs, rhs, desc)
   vim.keymap.set(mode, lhs, rhs, { desc = desc })
 end
 
+-- Disable Neovim's command-line window; it is easy to open accidentally with q:.
+map("n", "q:", "<Nop>", "Disable command-line window")
+map("c", "<C-f>", "<Nop>", "Disable command-line window")
+
 map("n", "<leader>e", vim.diagnostic.open_float, "Diagnostics: open [E]rror float")
 map("n", "<leader>q", vim.diagnostic.setloclist, "Diagnostics: open errors pane")
 map("n", "[d", vim.diagnostic.goto_prev, "Diagnostics: prev")
