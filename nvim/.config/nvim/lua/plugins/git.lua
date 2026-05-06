@@ -8,6 +8,16 @@ return {
     "tpope/vim-fugitive",
     config = function()
       vim.keymap.set("n", "<leader>gs", git_fugitive_full, { desc = "Fugitive: [G]it [S]tate Panel" })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "fugitive",
+        callback = function(event)
+          vim.keymap.set("n", "P", "<Nop>", {
+            buffer = event.buf,
+            silent = true,
+            desc = "Fugitive: disable patch review",
+          })
+        end,
+      })
     end
   },
   {

@@ -12,3 +12,4 @@ WRN 2026-04-24T13:50:05.027 ?.11887    server_start:199: Failed to start server:
 WRN 2026-04-24T13:50:26.444 ?.11945    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/DN60Ka/nvim.11945.0
 WRN 2026-04-24T15:11:07.233 ?.32114    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/cEecjS/nvim.32114.0
 WRN 2026-04-24T15:11:15.060 ?.32133    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/M6DPQn/nvim.32133.0
+WRN 2026-04-29T15:00:36.455 ?.16753    server_start:199: Failed to start server: operation not permitted: /var/folders/yt/_x8xks5n0_z4g6bld_6y6q7c0000gn/T/nvim.alexscare/h0db95/nvim.16753.0
