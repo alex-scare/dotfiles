@@ -3,7 +3,54 @@
 
 - Common configs: `zsh`, `tmux`, `ghostty`, `starship`, `nvim`
 - Arch only: `hyprland`, `waybar`
-- MacOS only: `aerospace`, `sketchybar`
+- MacOS only: `aerospace`
+
+#### AeroSpace window layout
+
+AeroSpace keeps each workspace as a tree of containers. Horizontal means windows
+sit left/right inside the current container; vertical means they sit up/down.
+
+- `alt-h/j/k/l` moves focus left/down/up/right.
+- `alt-shift-h/j/k/l` moves the focused window left/down/up/right.
+- `alt-n` makes the focused tiled container vertical, so windows stack up/down.
+- `alt-m` makes the focused tiled container horizontal, so windows sit left/right.
+- `alt-u/i` shrinks or grows the focused window with smart resize.
+- `alt-/` cycles the focused container through tiled horizontal/vertical layouts.
+
+For more deliberate nesting, enter service mode with `alt-shift-;`, then use
+`alt-shift-h/j/k/l` to join the focused window with its neighbor in that
+direction.
+
+For a common three-window layout with one window on the left half and two
+windows stacked on the right half:
+
+1. Put the three windows on the same workspace.
+2. Focus the window that should stay on the left.
+3. Use `alt-shift-h` or `alt-shift-l` until it is on the left side.
+4. Focus the middle/right window that should be stacked with its neighbor.
+5. Enter service mode with `alt-shift-;`.
+6. Press `alt-shift-l` to join it with the window to the right, or
+   `alt-shift-h` to join it with the window to the left.
+7. Press `alt-n` to make that joined right-side container vertical.
+8. Use `alt-u/i` on the focused window if the split needs a size adjustment.
+
+#### SketchyBar integration
+
+SketchyBar is not part of the active macOS setup anymore, but the dormant
+`sketchybar/` package is still in the repo.
+
+To restore it, stow the package with `stow --restow -t "$HOME" sketchybar`,
+start SketchyBar through your macOS service manager, then add this AeroSpace
+workspace hook back to `aerospace/.aerospace.toml`:
+
+```toml
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'pgrep -x sketchybar >/dev/null && sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+```
+
+If the bar sits at the top of the screen, set `gaps.outer.top` to the bar height
+in the AeroSpace `[gaps]` section.
 
 #### About installation on Arch
 

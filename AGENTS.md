@@ -32,6 +32,10 @@ This repo is for practical, personal dotfiles setup. Optimize for clarity and sp
 - Terminal theme is controlled by Ghostty config.
 - Prompt styling is controlled by Starship config.
 - Keep font/theme decisions explicit in config files.
+- Avoid catch-all AeroSpace `on-window-detected` tiling rules; they override dialog/minor-window heuristics and can break transient app UI.
+- AeroSpace keybindings use `alt-h/j/k/l` for focus and `alt-shift-h/j/k/l` for moving windows.
+- AeroSpace layout keybindings use `alt-n/m` for vertical/horizontal orientation and `alt-u/i` for shrink/grow.
+- Keep AeroSpace container normalization enabled; prefer `layout horizontal/vertical` or `join-with` over `split`.
 
 ## Editing Expectations
 

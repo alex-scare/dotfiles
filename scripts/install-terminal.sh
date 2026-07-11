@@ -31,7 +31,7 @@ set_default_shell() {
 # Main flow
 
 step "Installing terminal tools"
-sudo pacman -S --needed --noconfirm ghostty alacritty github-cli neovim \
+sudo pacman -S --needed --noconfirm ghostty alacritty github-cli git neovim tmux \
                                     zsh tree fzf stow ttf-jetbrains-mono-nerd
 yay -S --needed --noconfirm starship
 
@@ -45,6 +45,15 @@ stow --restow -t "$HOME" starship
 stow --restow -t "$HOME" tmux
 stow --restow -t "$HOME" zsh
 stow --restow -t "$HOME" alacritty
+
+step "Installing tmux plugins"
+mkdir -p "$HOME/.tmux/plugins"
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+else
+  echo "TPM already installed, skipping clone."
+fi
+"$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
 echo
 echo "Terminal setup done."
