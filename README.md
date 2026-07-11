@@ -1,3 +1,21 @@
+## Using GNU Stow
+
+Run Stow from the repository root. Each top-level directory is a package whose
+contents are linked into your home directory.
+
+```sh
+# Install or refresh a package
+stow --restow -t "$HOME" zsh
+
+# Preview changes without applying them
+stow --no --verbose --restow -t "$HOME" zsh
+
+# Remove a package's links
+stow --delete -t "$HOME" zsh
+```
+
+Replace `zsh` with the package you want to manage, such as `nvim`, `tmux`,
+`ghostty`, or `starship`.
 
 #### About configuration files 
 
