@@ -13,7 +13,7 @@ if [[ -s "$NVM_DIR/bash_completion" ]]; then
 fi
 
 
-# fzf configurations 
+# fzf configurations
 export FZF_DEFAULT_OPTS='--walker-skip=".git,node_modules,target,dist,build,Library,Pods,fvm,flutter/packages,go/pkg"'
 export FZF_COMPLETION_TRIGGER='~~'
 
