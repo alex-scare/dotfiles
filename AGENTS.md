@@ -36,6 +36,7 @@ This repo is for practical, personal dotfiles setup. Optimize for clarity and sp
 - AeroSpace keybindings use `alt-h/j/k/l` for focus and `alt-shift-h/j/k/l` for moving windows.
 - AeroSpace layout keybindings use `alt-n/m` for vertical/horizontal orientation and `alt-u/i` for shrink/grow.
 - Keep AeroSpace container normalization enabled; prefer `layout horizontal/vertical` or `join-with` over `split`.
+- AeroSpace workspaces 6-10 are assigned to the secondary monitor; workspace 10 uses `alt-0`.
 
 ## Editing Expectations
 

@@ -4,14 +4,21 @@ typeset -U path PATH  # dedupe PATH entries
 export LANG="en_US.UTF-8"
 export EDITOR="nvim"
 
+# Set up NVM and select the default Node version for every new Zsh session.
+# This overrides an inherited Node path (for example, from a GUI app such as Zed)
+# so `node`, `npm`, and `bun` commands use the NVM default consistently.
 export NVM_DIR="$HOME/.nvm"
 if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # Define the `nvm` shell function and its PATH integration.
   source "$NVM_DIR/nvm.sh"
+  # Switch to the version named by `nvm alias default` (currently Node 24).
+  nvm use default --silent
 fi
+
+# Enable NVM's optional tab completion when it is installed.
 if [[ -s "$NVM_DIR/bash_completion" ]]; then
   source "$NVM_DIR/bash_completion"
 fi
-
 
 # fzf configurations
 export FZF_DEFAULT_OPTS='--walker-skip=".git,node_modules,target,dist,build,Library,Pods,fvm,flutter/packages,go/pkg"'
