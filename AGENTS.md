@@ -32,6 +32,7 @@ This repo is for practical, personal dotfiles setup. Optimize for clarity and sp
 - Terminal theme is controlled by Ghostty config.
 - Prompt styling is controlled by Starship config.
 - Keep font/theme decisions explicit in config files.
+- Neovim colorschemes must be top-level Lazy plugin specs; nesting one inside another prevents Lazy from loading it. Name `catppuccin/nvim` explicitly as `catppuccin` to avoid its `nvim` name colliding with `nvim-treesitter/nvim`.
 - Avoid catch-all AeroSpace `on-window-detected` tiling rules; they override dialog/minor-window heuristics and can break transient app UI.
 - AeroSpace keybindings use `alt-h/j/k/l` for focus and `alt-shift-h/j/k/l` for moving windows.
 - AeroSpace layout keybindings use `alt-n/m` for vertical/horizontal orientation and `alt-u/i` for shrink/grow.

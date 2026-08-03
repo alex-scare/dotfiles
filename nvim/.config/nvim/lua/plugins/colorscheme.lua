@@ -19,18 +19,11 @@ return {
   },
   {
     "catppuccin/nvim",
+    name = "catppuccin",
     enabled = true,
     lazy = false,
     config = function()
       vim.cmd.colorscheme "catppuccin-frappe"
-    end
-  },
-  {
-    "VonHeikemen/little-wonder",
-    enabled = false,
-    lazy = false,
-    config = function()
-      vim.cmd.colorscheme 'lw-mariana'
     end
   },
   {
