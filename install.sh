@@ -6,8 +6,12 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 source "$SCRIPT_DIR/scripts/lib/os.sh"
 
+if isMacOS; then
+  exec bash "$SCRIPT_DIR/scripts/install-macos.sh"
+fi
+
 if ! isArch; then
-  echo "This script is intended for Arch Linux."
+  echo "This script supports macOS and Arch Linux only."
   exit 1
 fi
 

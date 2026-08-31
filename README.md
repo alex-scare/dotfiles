@@ -91,3 +91,26 @@ chmod +x install.sh
 ```
 
 3. Execute
+
+#### About installation on macOS
+
+Run the same top-level installer from a clone of this repository:
+
+```sh
+chmod +x install.sh
+./install.sh
+```
+
+It installs Homebrew when needed, then installs Zed, Brave, Raycast, LocalSend,
+ChatGPT, and Stow. It stows the Zed settings and, when the existing `codex/`
+package is present, stows Codex configuration and writes one upload-ready ZIP
+per skill to `~/Desktop/ChatGPT Skills`.
+
+ChatGPT Skills are uploaded manually: open **Plugins** > **Skills** >
+**Create** > **Upload**, then select the desired archive. This is deliberate:
+ChatGPT installs uploaded skills itself rather than reading a local symlink.
+
+For Raycast, run **Export Preferences & Data** on the current Mac and save the
+generated `raycast.rayconfig` in `raycast/`. The installer places it on the new
+Mac's Desktop for import. Use Brave Sync after installation to bring over the
+browser profile; no browser profile data is committed here.
