@@ -20,12 +20,33 @@ elif [[ -x /usr/local/bin/brew ]]; then
   eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-echo "Installing macOS setup tools..."
-brew install stow
-brew install --cask zed brave-browser raycast localsend chatgpt
+echo "Installing command-line tools..."
+brew install stow git gh neovim tmux starship fzf tree bat alacritty
 
-echo "Stowing Zed settings..."
+echo "Installing macOS apps..."
+brew tap nikitabobko/tap
+brew trust nikitabobko/tap
+brew install --cask nikitabobko/tap/aerospace
+brew install --cask zed brave-browser raycast localsend chatgpt ghostty \
+  font-jetbrains-mono-nerd-font
+
+echo "Stowing macOS dotfiles..."
+stow --restow -t "$HOME" aerospace
+stow --restow -t "$HOME" alacritty
+stow --restow -t "$HOME" backgrounds
+stow --restow -t "$HOME" ghostty
+stow --restow -t "$HOME" nvim
+stow --restow -t "$HOME" starship
+stow --restow -t "$HOME" tmux
+stow --restow -t "$HOME" zsh
 stow --restow -t "$HOME" zed
+
+echo "Installing tmux plugins..."
+mkdir -p "$HOME/.tmux/plugins"
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+"$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
 if [[ -d "$SCRIPT_DIR/codex/.codex" ]]; then
   echo "Stowing Codex configuration..."

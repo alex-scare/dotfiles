@@ -101,10 +101,20 @@ chmod +x install.sh
 ./install.sh
 ```
 
-It installs Homebrew when needed, then installs Zed, Brave, Raycast, LocalSend,
-ChatGPT, and Stow. It stows the Zed settings and, when the existing `codex/`
-package is present, stows Codex configuration and writes one upload-ready ZIP
-per skill to `~/Desktop/ChatGPT Skills`.
+It installs Homebrew when needed, then installs AeroSpace, Zed, Brave, Raycast,
+LocalSend, ChatGPT, Ghostty, Alacritty, Neovim, tmux, Starship, the JetBrains
+Mono Nerd Font, and the shell tools used by the configurations. It stows the
+macOS-compatible packages: `aerospace`, `alacritty`, `backgrounds`, `ghostty`,
+`nvim`, `starship`, `tmux`, `zsh`, and `zed`.
+
+It deliberately does not install or stow `sketchybar`: that package remains
+dormant, as described above. The script also installs TPM and its tmux plugins.
+The tmux copy binding currently uses Linux's `xclip`; replace it with `pbcopy`
+before relying on mouse-copy in tmux on macOS.
+
+When the existing `codex/` package is present, the installer also stows Codex
+configuration and writes one upload-ready ZIP per skill to
+`~/Desktop/ChatGPT Skills`.
 
 ChatGPT Skills are uploaded manually: open **Plugins** > **Skills** >
 **Create** > **Upload**, then select the desired archive. This is deliberate:
