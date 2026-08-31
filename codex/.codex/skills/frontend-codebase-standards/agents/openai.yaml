@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Codebase Standards"
+  short_description: "Build clean, strict, maintainable frontends"
+  default_prompt: "Use $frontend-codebase-standards to implement this frontend change with the agreed engineering practices."

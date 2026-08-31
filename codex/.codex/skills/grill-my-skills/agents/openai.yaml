@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill My Skills"
+  short_description: "Run adaptive interview skill drills"
+  default_prompt: "Use $grill-my-skills to assess my interview readiness on the next high-risk topic."

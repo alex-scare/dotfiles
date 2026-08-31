@@ -1,0 +1,4 @@
+interface:
+  display_name: "Idiomatic Go Snippets"
+  short_description: "Apply idiomatic Go patterns fast"
+  default_prompt: "Use $go-idiomatic-snippets to apply idiomatic Go snippets for constructors, errors, context, repositories, handlers, concurrency, and tests."
