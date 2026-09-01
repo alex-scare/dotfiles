@@ -21,18 +21,18 @@ elif [[ -x /usr/local/bin/brew ]]; then
 fi
 
 echo "Installing command-line tools..."
-brew install stow git gh neovim tmux starship fzf tree bat alacritty
+brew install stow git gh neovim tmux starship fzf tree bat
 
 echo "Installing macOS apps..."
 brew tap nikitabobko/tap
 brew trust nikitabobko/tap
 brew install --cask nikitabobko/tap/aerospace
-brew install --cask zed brave-browser raycast localsend chatgpt ghostty \
+brew install --cask zed brave-browser localsend ghostty \
   font-jetbrains-mono-nerd-font
+brew install --cask "$SCRIPT_DIR/raycast/raycast-v1.rb"
 
 echo "Stowing macOS dotfiles..."
 stow --restow -t "$HOME" aerospace
-stow --restow -t "$HOME" alacritty
 stow --restow -t "$HOME" backgrounds
 stow --restow -t "$HOME" ghostty
 stow --restow -t "$HOME" nvim
@@ -51,19 +51,6 @@ fi
 if [[ -d "$SCRIPT_DIR/codex/.codex" ]]; then
   echo "Stowing Codex configuration..."
   stow --restow --ignore='\.DS_Store$' -t "$HOME" codex
-
-  skill_source="$SCRIPT_DIR/codex/.codex/skills"
-  skill_export="$HOME/Desktop/ChatGPT Skills"
-  if [[ -d "$skill_source" ]]; then
-    echo "Preparing ChatGPT skill uploads..."
-    mkdir -p "$skill_export"
-    for skill in "$skill_source"/*; do
-      [[ -d "$skill" && -f "$skill/SKILL.md" ]] || continue
-      skill_name="$(basename "$skill")"
-      ditto -c -k --norsrc --keepParent "$skill" "$skill_export/$skill_name.zip"
-    done
-    echo "ChatGPT skill archives: $skill_export"
-  fi
 fi
 
 if [[ -f "$SCRIPT_DIR/raycast/raycast.rayconfig" ]]; then
@@ -72,4 +59,3 @@ if [[ -f "$SCRIPT_DIR/raycast/raycast.rayconfig" ]]; then
 fi
 
 echo "Done. Open Raycast to import Raycast.rayconfig, if present."
-echo "Open ChatGPT > Plugins > Skills > Create > Upload to add the skill archives."

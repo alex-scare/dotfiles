@@ -31,7 +31,7 @@ set_default_shell() {
 # Main flow
 
 step "Installing terminal tools"
-sudo pacman -S --needed --noconfirm ghostty alacritty github-cli git neovim tmux \
+sudo pacman -S --needed --noconfirm ghostty github-cli git neovim tmux \
                                     zsh tree fzf stow ttf-jetbrains-mono-nerd
 yay -S --needed --noconfirm starship
 
@@ -44,7 +44,6 @@ stow --restow -t "$HOME" ghostty
 stow --restow -t "$HOME" starship
 stow --restow -t "$HOME" tmux
 stow --restow -t "$HOME" zsh
-stow --restow -t "$HOME" alacritty
 
 step "Installing tmux plugins"
 mkdir -p "$HOME/.tmux/plugins"

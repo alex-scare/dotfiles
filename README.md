@@ -101,11 +101,11 @@ chmod +x install.sh
 ./install.sh
 ```
 
-It installs Homebrew when needed, then installs AeroSpace, Zed, Brave, Raycast,
-LocalSend, ChatGPT, Ghostty, Alacritty, Neovim, tmux, Starship, the JetBrains
-Mono Nerd Font, and the shell tools used by the configurations. It stows the
-macOS-compatible packages: `aerospace`, `alacritty`, `backgrounds`, `ghostty`,
-`nvim`, `starship`, `tmux`, `zsh`, and `zed`.
+It installs Homebrew when needed, then installs AeroSpace, Zed, Brave, Raycast
+v1, LocalSend, Ghostty, Neovim, tmux, Starship, the JetBrains Mono Nerd Font,
+and the shell tools used by the configurations. It stows the macOS-compatible
+packages: `aerospace`, `backgrounds`, `ghostty`, `nvim`, `starship`, `tmux`,
+`zsh`, and `zed`.
 
 It deliberately does not install or stow `sketchybar`: that package remains
 dormant, as described above. The script also installs TPM and its tmux plugins.
@@ -113,14 +113,15 @@ The tmux copy binding currently uses Linux's `xclip`; replace it with `pbcopy`
 before relying on mouse-copy in tmux on macOS.
 
 When the existing `codex/` package is present, the installer also stows Codex
-configuration and writes one upload-ready ZIP per skill to
-`~/Desktop/ChatGPT Skills`.
-
-ChatGPT Skills are uploaded manually: open **Plugins** > **Skills** >
-**Create** > **Upload**, then select the desired archive. This is deliberate:
-ChatGPT installs uploaded skills itself rather than reading a local symlink.
+configuration. ChatGPT is optional. To install it and add a skill later, run
+`brew install --cask chatgpt`, then run
+`ditto -c -k --norsrc --keepParent codex/.codex/skills/<skill> ~/Desktop/<skill>.zip`.
+In ChatGPT, choose **Plugins** > **Skills** > **Create** > **Upload** and select
+that ZIP.
 
 For Raycast, run **Export Preferences & Data** on the current Mac and save the
 generated `raycast.rayconfig` in `raycast/`. The installer places it on the new
-Mac's Desktop for import. Use Brave Sync after installation to bring over the
-browser profile; no browser profile data is committed here.
+Mac's Desktop for import. The installer uses the local `raycast-v1` cask,
+pinned to v1.104.25 (the latest v1 release), so it will not install Raycast v2.
+Use Brave Sync after installation to bring over the browser profile; no browser
+profile data is committed here.
