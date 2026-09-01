@@ -29,7 +29,6 @@ brew trust nikitabobko/tap
 brew install --cask nikitabobko/tap/aerospace
 brew install --cask zed brave-browser localsend ghostty \
   font-jetbrains-mono-nerd-font
-brew install --cask "$SCRIPT_DIR/raycast/raycast-v1.rb"
 
 echo "Stowing macOS dotfiles..."
 stow --restow -t "$HOME" aerospace
@@ -48,14 +47,4 @@ if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
 fi
 "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
-if [[ -d "$SCRIPT_DIR/codex/.codex" ]]; then
-  echo "Stowing Codex configuration..."
-  stow --restow --ignore='\.DS_Store$' -t "$HOME" codex
-fi
-
-if [[ -f "$SCRIPT_DIR/raycast/raycast.rayconfig" ]]; then
-  cp -p "$SCRIPT_DIR/raycast/raycast.rayconfig" "$HOME/Desktop/Raycast.rayconfig"
-  echo "Raycast export: $HOME/Desktop/Raycast.rayconfig"
-fi
-
-echo "Done. Open Raycast to import Raycast.rayconfig, if present."
+echo "Done."

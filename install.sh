@@ -92,7 +92,7 @@ i_pacman steam
 
 step "Installing extra apps"
 i_pacman proton-vpn-gtk-app
-yay -S --needed --noconfirm brave-bin openai-codex-bin
+yay -S --needed --noconfirm brave-bin
 
 echo
 echo "Done."

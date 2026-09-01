@@ -1,4 +1,0 @@
-interface:
-  display_name: "Language Proficiency Revision"
-  short_description: "Review language patterns in messages"
-  default_prompt: "Use $language-proficiency-revision to review my recent messages or history for recurring language mistakes and phrasing patterns."
